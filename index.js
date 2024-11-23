@@ -43,6 +43,7 @@ const USERS = [
 
 app.post("/logout", (request, response) =>{
     request.session.destroy(() => {
+
         response.render("index")
     });
     
@@ -115,6 +116,7 @@ app.get("/landing", (request, response) =>{
     const role = request.session.user.role
     const userList = USERS
     response.render("landing", {username, role, userList});
+    
 });
 
 

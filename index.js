@@ -54,17 +54,17 @@ app.get("/login", (request, response) => {
 app.post("/login", (request, response) => {
     const {email, password} = request.body;
     const user = USERS.find((u)=>u.email === email);
+   
+
+    if (!user) {
+        return response.render("login", {errorMessage: "Invalid credentials."});
+    }
+
     const validPassword = bcrypt.compareSync(password, user.password);
 
     if (!validPassword){
         return response.render("login", {errorMessage: "Invalid credentials."});
     }
-    
-    if (!user) {
-        return response.render("login", {errorMessage: "Invalid credentials."});
-    }
-
-    
 
 
     request.session.user = user;

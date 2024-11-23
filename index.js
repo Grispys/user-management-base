@@ -2,6 +2,8 @@ const express = require("express");
 const path = require("path");
 const session = require("express-session");
 const bcrypt = require('bcrypt');
+const { resourceUsage } = require("process");
+const { request } = require("http");
 
 const app = express();
 const PORT = 3000;
@@ -39,6 +41,11 @@ const USERS = [
     },
 ];
 
+app.get("/landing", (request, response) =>{
+    return response.render("landing");
+});
+
+
 // GET /login - Render login form
 app.get("/login", (request, response) => {
     response.render("login");
@@ -46,7 +53,20 @@ app.get("/login", (request, response) => {
 
 // POST /login - Allows a user to login
 app.post("/login", (request, response) => {
+    const {email, password} = request.body;
+    const user = USERS.find((u)=>u.email === email && u.password === password);
 
+    if (!user) {
+        return response.render("login", {errorMessage: "Invalid credentials."});
+    }
+
+    request.session.user = user;
+    if(user.role == user){
+        response.redirect('/landing')
+    }else{
+        response.redirect('')
+    }
+    
 });
 
 // GET /signup - Render signup form

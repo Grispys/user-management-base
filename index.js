@@ -41,10 +41,9 @@ const USERS = [
     },
 ];
 
-app.get("/landing", (request, response) =>{
-    return response.render("landing");
+app.post("/logout", (request, response) =>{
+    response.render("index")
 });
-
 
 // GET /login - Render login form
 app.get("/login", (request, response) => {
@@ -54,18 +53,26 @@ app.get("/login", (request, response) => {
 // POST /login - Allows a user to login
 app.post("/login", (request, response) => {
     const {email, password} = request.body;
-    const user = USERS.find((u)=>u.email === email && u.password === password);
+    const user = USERS.find((u)=>u.email === email);
+    const validPassword = bcrypt.compareSync(password, user.password);
 
     if (!user) {
         return response.render("login", {errorMessage: "Invalid credentials."});
     }
 
-    request.session.user = user;
-    if(user.role == user){
-        response.redirect('/landing')
-    }else{
-        response.redirect('')
+    if (!validPassword){
+        return response.render("login", {errorMessage: "Invalid credentials."});
     }
+
+
+    request.session.user = user;
+    response.redirect('/landing')
+    
+    // if(user.role == user){
+    //     response.redirect('/landing')
+    // }else{
+    //     response.redirect('')
+    // }
     
 });
 
@@ -88,9 +95,10 @@ app.get("/", (request, response) => {
 });
 
 // GET /landing - Shows a welcome page for users, shows the names of all users if an admin
-app.get("/landing", (request, response) => {
-    
+app.get("/landing", (request, response) =>{
+    response.render("landing", {username: request.session.user.username});
 });
+
 
 // Start server
 app.listen(PORT, () => {

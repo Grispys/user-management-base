@@ -56,13 +56,15 @@ app.post("/login", (request, response) => {
     const user = USERS.find((u)=>u.email === email);
     const validPassword = bcrypt.compareSync(password, user.password);
 
+    if (!validPassword){
+        return response.render("login", {errorMessage: "Invalid credentials."});
+    }
+    
     if (!user) {
         return response.render("login", {errorMessage: "Invalid credentials."});
     }
 
-    if (!validPassword){
-        return response.render("login", {errorMessage: "Invalid credentials."});
-    }
+    
 
 
     request.session.user = user;
@@ -78,7 +80,22 @@ app.get("/signup", (request, response) => {
 
 // POST /signup - Allows a user to signup
 app.post("/signup", (request, response) => {
-    
+    const newName = request.body.username;
+    const newEmail = request.body.email;
+    const newPassword = request.body.password;
+    const newID = Math.max(...USERS.map(user => user.id)) + 1;
+    const newUser = {
+        id:newID,
+        username: newName,
+        email: newEmail,
+        password:bcrypt.hashSync(newPassword, SALT_ROUNDS),
+        role:"user"
+    }
+
+    USERS.push(newUser)
+    console.log(USERS)
+    response.render("signup", {successMessage: "Your account has been made"});
+
 });
 
 // GET / - Render index page or redirect to landing if logged in
@@ -93,7 +110,8 @@ app.get("/", (request, response) => {
 app.get("/landing", (request, response) =>{
     const username = request.session.user.username
     const role = request.session.user.role
-    response.render("landing", {username, role});
+    const userList = USERS
+    response.render("landing", {username, role, userList});
 });
 
 

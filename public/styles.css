@@ -23,6 +23,13 @@ body {
     margin-top: 0px;
 }
 
+.main-content .success-message {
+    color: rgb(252, 162, 27);
+    font-weight: bold;
+    font-size: 16px;
+    margin-top: 0px;
+}
+
 .main-content h1 {
     font-size: 50px;
 }

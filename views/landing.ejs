@@ -13,8 +13,11 @@
 	
 		<h3>List of all users:</h3>
 		<ul>
-			<li>none</li>
-		</ul>
+			<% for(var i = 0; i < userList.length; i++) { %>
+			  <li><%= "Username: " + userList[i].username + " Email: " + userList[i].email + " Role: " + userList[i].role %></li>
+			<% } %>
+	  
+		  </ul>
 	  <% } else if (role === 'user') { %>
 		<ul>
 		  <li>Logged in</li>

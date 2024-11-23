@@ -42,7 +42,10 @@ const USERS = [
 ];
 
 app.post("/logout", (request, response) =>{
-    response.render("index")
+    request.session.destroy(() => {
+        response.render("index")
+    });
+    
 });
 
 // GET /login - Render login form

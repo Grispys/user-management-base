@@ -67,12 +67,7 @@ app.post("/login", (request, response) => {
 
     request.session.user = user;
     response.redirect('/landing')
-    
-    // if(user.role == user){
-    //     response.redirect('/landing')
-    // }else{
-    //     response.redirect('')
-    // }
+
     
 });
 
@@ -96,8 +91,11 @@ app.get("/", (request, response) => {
 
 // GET /landing - Shows a welcome page for users, shows the names of all users if an admin
 app.get("/landing", (request, response) =>{
-    response.render("landing", {username: request.session.user.username});
+    const username = request.session.user.username
+    const role = request.session.user.role
+    response.render("landing", {username, role});
 });
+
 
 
 // Start server

@@ -3,13 +3,28 @@
   <h2>Welcome, <%= username %></h2>
 
   <div class="dashboard-content">
-    <h3>What have you been upto? You:</h3>
-    <ul>
-      <li>Logged in</li>
-      <li>Haven't logged out yet</li>
-      <li>Continue to read this list</li>
-      <li>Please leave.</li>
-    </ul>
+    <% if (role === 'admin') { %>
+		<h3>What have you been upto? You:</h3>
+		<ul>
+		  <li>Are looking at this page</li>
+		  <li>are currently an admin</li>
+		  <li>Stay as long as you'd like.</li>
+		</ul>
+	
+		<h3>List of all users:</h3>
+		<ul>
+			<li>none</li>
+		</ul>
+	  <% } else if (role === 'user') { %>
+		<ul>
+		  <li>Logged in</li>
+		  <li>Haven't logged out yet</li>
+		  <li>Continue to read this list</li>
+		  <li>Please leave.</li>
+		</ul>
+	  <% } %>
+
+
 
     <form action="/logout" method="post">
       <button type="submit">Logout</button>
